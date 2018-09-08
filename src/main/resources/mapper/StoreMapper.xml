@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maker.store.mapper.StoreMapper" >
+  <resultMap id="BaseResultMap" type="com.maker.store.model.Store" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="store_id" property="storeId" jdbcType="INTEGER" />
+    <result column="store_name" property="storeName" jdbcType="VARCHAR" />
+    <result column="store_introduce" property="storeIntroduce" jdbcType="VARCHAR" />
+    <result column="browse_times" property="browseTimes" jdbcType="INTEGER" />
+  </resultMap>
+  <select id="selectStoreByStoreId" resultMap="BaseResultMap">
+    SELECT *
+    FROM store
+    WHERE store_id=#{storeId}
+  </select>
+</mapper>
