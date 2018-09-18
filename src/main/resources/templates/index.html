@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymelraf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<table border="1" align="center">
+    <tr>
+        <td>ID</td>
+        <td>店名</td>
+        <td>店铺介绍</td>
+        <td>浏览次数</td>
+    </tr>
+    <tr th:each ="i:${stores}">
+        <td th:text = "${i.storeId}"></td>
+        <td th:text = "${i.storeName}"></td>
+        <td th:text = "${i.storeIntroduce}"></td>
+        <td th:text = "${i.browseTimes}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

@@ -3,6 +3,7 @@ package com.maker.store.model;
 import javax.persistence.*;
 
 public class Store {
+    @Id
     @Column(name = "store_id")
     private Integer storeId;
 
@@ -15,6 +16,7 @@ public class Store {
     @Column(name = "browse_times")
     private Integer browseTimes;
 
+    public Store(){}
     /**
      * @return store_id
      */
