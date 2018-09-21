@@ -8,8 +8,16 @@ import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 
 import static org.springframework.http.MediaType.*;
 
@@ -22,13 +30,13 @@ public class StoreController {
 
     private Logger logger=LoggerFactory.getLogger(StoreController.class);
 
-    @GetMapping(value = "/getStore/{storeId}",headers = "Accept=application/json",consumes={ALL_VALUE},produces="application/json")
+    @GetMapping(value = "/getStore/{storeId}",headers = "Accept=application/json",consumes="application/json",produces="application/json")
     @ApiOperation(value = "根据ID获取商铺信息",response = Store.class,responseContainer = "list")
     public ResponseEntity getStore(@ApiParam(value ="storeId",required = true)@PathVariable String storeId){
         return ResponseEntity.ok(storeService.getStoreByStoreId(storeId));
     }
 
-    @PostMapping(value = "/addStore")
+    @PostMapping(value = "/addStore",params = "action=save")
     @ApiOperation(value = "增加一个商铺",response = Store.class,responseContainer = "list")
     public void addStore(@RequestParam String name,
                          @RequestParam String introduce,
@@ -60,4 +68,32 @@ public class StoreController {
         Store store=storeService.getStoreByStoreId(storeId);
         storeService.deleteStore(store);
     }
+
+    @PostMapping(value = "/upload")
+    public ModelAndView test(MultipartFile file) throws IOException {
+        ModelAndView modelAndView=new ModelAndView();
+        if(!file.isEmpty()){
+            modelAndView.addObject("fileName",file.getOriginalFilename());
+            modelAndView.addObject("fileSize",file.getSize());
+        }
+        modelAndView.setViewName("test");
+        file.transferTo(new File("d:\\demo.png"));
+        return modelAndView;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder){
+        binder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
+    }
+
+    @GetMapping(value = "/now")
+    public void printDate(Date date){
+        System.out.println(date);
+    }
+
+    @GetMapping(value = "/date")
+    public ResponseEntity date(@RequestParam Date date){
+        return ResponseEntity.ok(date);
+    }
+
 }

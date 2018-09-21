@@ -29,4 +29,15 @@ public class WebController {
         modelAndView.setViewName("index");
         return modelAndView;
     }
+
+//    @ModelAttribute
+//    public void findStoreByStoreId(Model model){
+//        model.addAttribute("stores",storeService.findAll());
+//    }
+//
+//    @GetMapping(value = "/all")
+//    public String index(){
+//        return "index";
+//    }
+
 }
