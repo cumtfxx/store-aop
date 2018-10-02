@@ -7,12 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Controller
 public class WebController {
-
     @Autowired
     private StoreService storeService;
 
@@ -30,14 +31,14 @@ public class WebController {
         return modelAndView;
     }
 
-//    @ModelAttribute
-//    public void findStoreByStoreId(Model model){
-//        model.addAttribute("stores",storeService.findAll());
-//    }
-//
-//    @GetMapping(value = "/all")
-//    public String index(){
-//        return "index";
-//    }
+    @ModelAttribute
+    public void findStoreByStoreId(Model model){
+        model.addAttribute("stores",storeService.findAll());
+    }
+
+    @GetMapping(value = "/all")
+    public String index(){
+        return "index";
+    }
 
 }

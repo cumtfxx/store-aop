@@ -1,12 +1,23 @@
 package com.maker.store.model;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 public class Store {
+    public interface add{}
+    public interface update{}
+
+    @Null(groups = {add.class},message = "添加时ID必须为空")
+    @NotNull(groups = {update.class},message = "更新时ID为必填项")
     @Id
     @Column(name = "store_id")
     private Integer storeId;
 
+    @Max(value = 10)
     @Column(name = "store_name")
     private String storeName;
 

@@ -10,11 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -30,7 +33,9 @@ public class StoreController {
 
     private Logger logger=LoggerFactory.getLogger(StoreController.class);
 
-    @GetMapping(value = "/getStore/{storeId}",headers = "Accept=application/json",consumes="application/json",produces="application/json")
+    @GetMapping(value = "/getStore/{storeId}",headers = "Accept=application/json"
+//            ,consumes="application/json",produces="application/json"
+    )
     @ApiOperation(value = "根据ID获取商铺信息",response = Store.class,responseContainer = "list")
     public ResponseEntity getStore(@ApiParam(value ="storeId",required = true)@PathVariable String storeId){
         return ResponseEntity.ok(storeService.getStoreByStoreId(storeId));
@@ -38,27 +43,19 @@ public class StoreController {
 
     @PostMapping(value = "/addStore",params = "action=save")
     @ApiOperation(value = "增加一个商铺",response = Store.class,responseContainer = "list")
-    public void addStore(@RequestParam String name,
-                         @RequestParam String introduce,
-                         @RequestParam Integer times){
-        Store store = new Store();
-        store.setStoreName(name);
-        store.setStoreIntroduce(introduce);
-        store.setBrowseTimes(times);
+    public void addStore(@Validated({Store.add.class}) @RequestBody Store store){
         storeService.addStore(store);
     }
 
-    @PutMapping(value = "/update/{id}")
+    @PostMapping(value = "/transactional",params = "action=save")
+    @ApiOperation(value = "增加两个商铺",response = Store.class,responseContainer = "list")
+    public void addTwoStore(){
+        storeService.addTwoStore();
+    }
+
+    @PutMapping(value = "/update")
     @ApiOperation(value = "更改店铺信息")
-    public void updateStore(@PathVariable Integer id,
-                            @RequestParam String name,
-                            @RequestParam String introduce,
-                            @RequestParam Integer times){
-        Store store = new Store();
-        store.setStoreId(id);
-        store.setStoreName(name);
-        store.setStoreIntroduce(introduce);
-        store.setBrowseTimes(times);
+    public void updateStore(@Validated({Store.update.class}) @RequestBody Store store){
         storeService.updateStore(store);
     }
 
@@ -84,11 +81,6 @@ public class StoreController {
     @InitBinder
     public void initBinder(WebDataBinder binder){
         binder.addCustomFormatter(new DateFormatter("yyyy-MM-dd"));
-    }
-
-    @GetMapping(value = "/now")
-    public void printDate(Date date){
-        System.out.println(date);
     }
 
     @GetMapping(value = "/date")

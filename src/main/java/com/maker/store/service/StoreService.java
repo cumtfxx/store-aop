@@ -4,6 +4,8 @@ import com.maker.store.mapper.StoreMapper;
 import com.maker.store.model.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
@@ -20,15 +22,29 @@ public class StoreService extends BaseService<StoreMapper,Store> {
         return storeMapper.selectStoreByStoreId(StoreId);
     }
 
-    public void addStore(Store store){
-        storeMapper.insert(store);
+    public Integer addStore(Store store){
+        return storeMapper.insert(store);
     }
 
     public Integer updateStore(Store store){
         return storeMapper.updateByPrimaryKey(store);
     }
 
-    public void deleteStore(Store store){
-        storeMapper.delete(store);
+    public Integer deleteStore(Store store){
+        return storeMapper.delete(store);
+    }
+
+    @Transactional
+    public void addTwoStore(){
+        Store store=new Store();
+        store.setStoreName("qqq");
+        store.setStoreIntroduce("www");
+        store.setBrowseTimes(123);
+        storeMapper.insert(store);
+        store=new Store();
+        store.setStoreName("qqqqqqqqqqqqqqqqqqqq");
+        store.setStoreIntroduce("www");
+        store.setBrowseTimes(123);
+        storeMapper.insert(store);
     }
 }

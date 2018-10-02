@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 public class MyInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        if(request.getRequestURL().toString().contains("test.html"))
+//        if(request.getRequestURL().toString().contains("form.html"))
 //            return true;
 //        else
 //            return false;
