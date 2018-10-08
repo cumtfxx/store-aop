@@ -67,6 +67,7 @@ public class StoreController {
     }
 
     @PostMapping(value = "/upload")
+    @ApiOperation(value = "上传文件")
     public ModelAndView test(MultipartFile file) throws IOException {
         ModelAndView modelAndView=new ModelAndView();
         if(!file.isEmpty()){
@@ -84,6 +85,7 @@ public class StoreController {
     }
 
     @GetMapping(value = "/date")
+    @ApiOperation(value = "日期格式化")
     public ResponseEntity date(@RequestParam Date date){
         return ResponseEntity.ok(date);
     }

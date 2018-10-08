@@ -3,7 +3,8 @@ buildscript {
         springBootVersion = '2.0.4.RELEASE'
     }
     repositories {
-        mavenCentral()
+//        mavenCentral()
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -20,8 +21,10 @@ group = 'com.maker'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    }
 }
 
 configurations {
@@ -42,4 +45,5 @@ dependencies {
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.6.1'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.6.1'
     compile group: 'tk.mybatis', name: 'mapper-spring-boot-starter', version: '2.0.3-beta1'
+    compile group: 'com.github.tomakehurst', name: 'wiremock', version: '2.19.0'
 }

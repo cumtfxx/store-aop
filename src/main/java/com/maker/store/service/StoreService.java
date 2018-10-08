@@ -1,5 +1,6 @@
 package com.maker.store.service;
 
+import com.maker.store.dao.StoreDao;
 import com.maker.store.mapper.StoreMapper;
 import com.maker.store.model.Store;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,9 @@ public class StoreService extends BaseService<StoreMapper,Store> {
     }
 
     public Store getStoreByStoreId(String StoreId){
-        return storeMapper.selectStoreByStoreId(StoreId);
+//        return storeMapper.selectStoreByStoreId(StoreId);
+        StoreDao storeDao=new StoreDao();
+        return storeDao.selectStoreByStoreId(StoreId);
     }
 
     public Integer addStore(Store store){
