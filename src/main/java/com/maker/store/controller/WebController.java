@@ -27,7 +27,8 @@ public class WebController {
 
     @PostMapping(value = "/api/add")
     @ApiOperation(value = "增加商铺并跳转到首页")
-    public ModelAndView add(Store store, ModelAndView modelAndView){
+    public ModelAndView add(Store store){
+        ModelAndView modelAndView=new ModelAndView();
         storeService.addStore(store);
         modelAndView.addObject("stores",storeService.findAll());
         modelAndView.setViewName("index");

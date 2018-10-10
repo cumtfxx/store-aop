@@ -1,19 +1,24 @@
 package com.maker.store.model;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.jdbc.core.RowMapper;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class Store {
+@Entity
+public class Store implements RowMapper<Store> {
     public interface add{}
     public interface update{}
 
     @Null(groups = {add.class},message = "添加时ID必须为空")
     @NotNull(groups = {update.class},message = "更新时ID为必填项")
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "store_id")
     private Integer storeId;
 
@@ -82,5 +87,15 @@ public class Store {
      */
     public void setBrowseTimes(Integer browseTimes) {
         this.browseTimes = browseTimes;
+    }
+
+    @Override
+    public Store mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Store store=new Store();
+        store.setStoreId(rs.getInt("store_id"));
+        store.setStoreName(rs.getString("store_name"));
+        store.setStoreIntroduce(rs.getString("store_introduce"));
+        store.setBrowseTimes(rs.getInt("browse_times"));
+        return store;
     }
 }

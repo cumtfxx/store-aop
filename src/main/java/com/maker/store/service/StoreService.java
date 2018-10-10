@@ -3,6 +3,7 @@ package com.maker.store.service;
 import com.maker.store.dao.StoreDao;
 import com.maker.store.mapper.StoreMapper;
 import com.maker.store.model.Store;
+import com.maker.store.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,14 +16,21 @@ public class StoreService extends BaseService<StoreMapper,Store> {
     @Autowired
     private StoreMapper storeMapper;
 
+    @Autowired
+    StoreDao storeDao;
+
+    @Autowired
+    StoreRepository storeRepository;
+
     public List<Store> findAll(){
-        return storeMapper.selectAll();
+//        return storeMapper.selectAll();
+        return storeRepository.findAll();
     }
 
-    public Store getStoreByStoreId(String StoreId){
+    public Store getStoreByStoreId(Integer storeId){
 //        return storeMapper.selectStoreByStoreId(StoreId);
-        StoreDao storeDao=new StoreDao();
-        return storeDao.selectStoreByStoreId(StoreId);
+//        return storeDao.selectStoreByStoreId(StoreId);
+        return storeRepository.findById(storeId).get();
     }
 
     public Integer addStore(Store store){
@@ -33,8 +41,9 @@ public class StoreService extends BaseService<StoreMapper,Store> {
         return storeMapper.updateByPrimaryKey(store);
     }
 
-    public Integer deleteStore(Store store){
-        return storeMapper.delete(store);
+    public Integer deleteStore(String storeId){
+//        return storeMapper.delete(store);
+        return storeDao.deleteStore(storeId);
     }
 
     @Transactional

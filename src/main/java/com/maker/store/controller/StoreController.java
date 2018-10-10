@@ -37,7 +37,7 @@ public class StoreController {
 //            ,consumes="application/json",produces="application/json"
     )
     @ApiOperation(value = "根据ID获取商铺信息",response = Store.class,responseContainer = "list")
-    public ResponseEntity getStore(@ApiParam(value ="storeId",required = true)@PathVariable String storeId){
+    public ResponseEntity getStore(@ApiParam(value ="storeId",required = true)@PathVariable Integer storeId){
         return ResponseEntity.ok(storeService.getStoreByStoreId(storeId));
     }
 
@@ -62,8 +62,7 @@ public class StoreController {
     @DeleteMapping(value = "/deleteStore/{storeId}")
     @ApiOperation(value = "根据ID删除店铺",response = Store.class,responseContainer = "list")
     public void deleteStore(@ApiParam(value ="storeId",required = true)@PathVariable String storeId){
-        Store store=storeService.getStoreByStoreId(storeId);
-        storeService.deleteStore(store);
+        storeService.deleteStore(storeId);
     }
 
     @PostMapping(value = "/upload")
@@ -89,5 +88,4 @@ public class StoreController {
     public ResponseEntity date(@RequestParam Date date){
         return ResponseEntity.ok(date);
     }
-
 }
