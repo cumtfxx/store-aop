@@ -28,22 +28,27 @@ public class StoreService extends BaseService<StoreMapper,Store> {
     }
 
     public Store getStoreByStoreId(Integer storeId){
-//        return storeMapper.selectStoreByStoreId(StoreId);
-//        return storeDao.selectStoreByStoreId(StoreId);
-        return storeRepository.findById(storeId).get();
+//        return storeMapper.selectStoreByStoreId(storeId);
+        return storeDao.selectStoreByStoreId(storeId);
+//        return storeRepository.findById(storeId).get();
     }
 
-    public Integer addStore(Store store){
-        return storeMapper.insert(store);
+    public void addStore(Store store){
+//        return storeMapper.insert(store);
+        storeDao.addStore(store);
+//        storeRepository.save(store);
     }
 
-    public Integer updateStore(Store store){
-        return storeMapper.updateByPrimaryKey(store);
+    public void updateStore(Store store){
+//        return storeMapper.updateByPrimaryKey(store);
+        storeDao.update(store);
+//        storeRepository.save(store);
     }
 
-    public Integer deleteStore(String storeId){
+    public void deleteStore(Integer storeId){
 //        return storeMapper.delete(store);
-        return storeDao.deleteStore(storeId);
+        storeDao.deleteStore(storeId);
+//        storeRepository.deleteById(storeId);
     }
 
     @Transactional

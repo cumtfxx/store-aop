@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.*;
+
 @Repository
 public class StoreDao {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    public Store selectStoreByStoreId(@Param("storeId") String storeId){
+    public Store selectStoreByStoreId(@Param("storeId") Integer storeId){
         Store store=jdbcTemplate.queryForObject("SELECT * FROM store WHERE store_id=?",new Store(),new Object[]{storeId});
 //        Store store = new Store();
 //        try {
@@ -27,7 +29,7 @@ public class StoreDao {
 ////            ResultSet rs=pstat.executeQuery();
 ////            第三种
 //            CallableStatement cs=connection.prepareCall("{CALL sp_select_store_by_store_id(?)}");
-//            cs.setString(1,storeId);
+//            cs.setInt(1,storeId);
 //            ResultSet rs=cs.executeQuery();
 //            if (rs.next()){
 //                store.setStoreId(rs.getInt("store_id"));
@@ -48,7 +50,14 @@ public class StoreDao {
         return store;
 
     }
-    public int deleteStore (@Param("storeId") String storeId){
-        return DbUtil.executeUpdate("DELETE FROM store WHERE store_id=?",new Object[]{storeId})==true?1:0;
+    public int addStore(Store store){
+        return jdbcTemplate.update("insert into store values (?,?,?,?)",store.getStoreId(),store.getStoreName(),store.getStoreIntroduce(),store.getBrowseTimes());
+    }
+    public int update(Store store){
+        return jdbcTemplate.update("update store set store_name=?,store_introduce=?,browse_times=? where store_id=?",store.getStoreName(),store.getStoreIntroduce(),store.getBrowseTimes(),store.getStoreId());
+    }
+    public int deleteStore (@Param("storeId") Integer storeId){
+//        return DbUtil.executeUpdate("DELETE FROM store WHERE store_id=?",new Object[]{storeId})==true?1:0;
+        return jdbcTemplate.update("delete from store where store_id=?",storeId);
     }
 }

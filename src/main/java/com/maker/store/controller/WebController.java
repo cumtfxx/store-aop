@@ -35,6 +35,26 @@ public class WebController {
         return modelAndView;
     }
 
+    @GetMapping(value = "/login")
+    public String login(){
+        return "login";
+    }
+
+    @GetMapping(value = "/home")
+    public String home(){
+        return "home";
+    }
+
+    @GetMapping(value = "/maker")
+    public String maker(){
+        return "maker";
+    }
+
+    @GetMapping(value = "/accessDenied")
+    public String accessDenied(){
+        return "accessDenied";
+    }
+
 //    @ModelAttribute
 //    public void findStoreByStoreId(Model model){
 //        model.addAttribute("stores",storeService.findAll());

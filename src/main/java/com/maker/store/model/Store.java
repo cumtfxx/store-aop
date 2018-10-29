@@ -22,7 +22,6 @@ public class Store implements RowMapper<Store> {
     @Column(name = "store_id")
     private Integer storeId;
 
-    @Max(value = 10)
     @Column(name = "store_name")
     private String storeName;
 
