@@ -92,4 +92,14 @@ public class StoreController {
     public ResponseEntity date(@RequestParam Date date){
         return ResponseEntity.ok(date);
     }
+
+    @GetMapping(value = "/Async")
+    @ApiOperation(value = "异步执行")
+    public ResponseEntity Async(){
+        logger.info("Test开始时间"+new Date());
+        storeService.task1();
+        storeService.task2();
+        logger.info("Test结束时间"+new Date());
+        return ResponseEntity.ok("OK");
+    }
 }

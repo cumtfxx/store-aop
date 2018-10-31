@@ -1,11 +1,40 @@
 package com.maker.store.model;
 
+import java.util.Date;
 import java.util.List;
 
 public class User {
     private Integer userId;
     private String username;
     private List<Role> roles;
+    private boolean enabled =true;
+    private Date lastPasswordResetDate;
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Date getLastPasswordResetDate() {
+        return lastPasswordResetDate;
+    }
+
+    public void setLastPasswordResetDate(Date lastPasswordResetDate) {
+        this.lastPasswordResetDate = lastPasswordResetDate;
+    }
+
 
     public List<Role> getRoles() {
         return roles;
@@ -49,4 +78,6 @@ public class User {
 
     private String password;
     private String nickname;
+
+
 }

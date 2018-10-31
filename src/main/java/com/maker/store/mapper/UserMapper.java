@@ -19,5 +19,9 @@ public interface UserMapper {
     User findByUsername(String username);
 
     @Select("select role_type from user u,role r,user_role ur where u.user_id=#{userId} and u.user_id=ur.user_id and r.role_id=ur.role_id")
+    @Results({
+            @Result(id = true,column = "role_id",property = "roleId"),
+            @Result(column = "role_type",property = "roleType")
+    })
     List<Role> findRoleByUser(Integer userId);
 }

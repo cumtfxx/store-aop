@@ -18,7 +18,6 @@ import java.util.List;
 @Component
 public class AppAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-
     private RedirectStrategy redirectStrategy= new DefaultRedirectStrategy();
 
     @Override
@@ -36,7 +35,7 @@ public class AppAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
             roles.add(a.getAuthority());
         }
         if(isUser(roles)){
-            url="/admin";
+            url="/home";
         }else if(isMaker(roles)){
             url="/maker";
         }else {
