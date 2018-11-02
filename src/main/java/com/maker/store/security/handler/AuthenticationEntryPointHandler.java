@@ -1,4 +1,4 @@
-package com.maker.store.security;
+package com.maker.store.security.handler;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Serializable;
-
+/**
+ * 身份验证失败处理401
+ */
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
+public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint, Serializable {
 
     private static final long serialVersionUID = -8970718410437077606L;
 

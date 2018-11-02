@@ -1,11 +1,13 @@
 package com.maker.store.controller;
 
+import com.maker.store.config.EnvConfig;
 import com.maker.store.model.Store;
 import com.maker.store.service.StoreService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,12 @@ import static org.springframework.http.MediaType.*;
 public class StoreController {
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private EnvConfig envConfig;
+
+    @Value("${server.port}")
+    private Integer serverPort;
 
     private Logger logger=LoggerFactory.getLogger(StoreController.class);
 
@@ -101,5 +109,12 @@ public class StoreController {
         storeService.task2();
         logger.info("Test结束时间"+new Date());
         return ResponseEntity.ok("OK");
+    }
+
+    @GetMapping(value = "/getServerPort")
+    @ApiOperation(value = "获取端口号")
+    public ResponseEntity getServerPort(){
+        logger.info(envConfig.getServerPort().toString());
+        return ResponseEntity.ok(envConfig.getPort());
     }
 }

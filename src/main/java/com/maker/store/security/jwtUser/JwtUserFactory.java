@@ -1,6 +1,6 @@
-package com.maker.store.security;
+package com.maker.store.security.jwtUser;
 
-import com.maker.store.model.JwtUser;
+import com.maker.store.security.jwtUser.JwtUser;
 import com.maker.store.model.Role;
 import com.maker.store.model.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,7 +28,7 @@ public final class JwtUserFactory {
 
     private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> authorities) {
         return authorities.stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getRoleType()))
+                .map(authority -> new SimpleGrantedAuthority("ROLE_"+authority.getRoleType()))
                 .collect(Collectors.toList());
     }
 }

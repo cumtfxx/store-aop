@@ -1,6 +1,6 @@
 package com.maker.store.util;
 
-import com.maker.store.model.JwtUser;
+import com.maker.store.security.jwtUser.JwtUser;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
@@ -8,20 +8,35 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClock;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenUtil implements Serializable {
+    private long tokenValidityInMilliseconds;       //失效日期
 
-    static final String CLAIM_KEY_USERNAME = "sub";
-    static final String CLAIM_KEY_CREATED = "iat";
+    private long tokenValidityInMillisecondsForRememberMe;      //（记住我）失效日期
+
+    private String secretKey;
+
+    private static final String AUTHORITIES_KEY = "auth";
+    @PostConstruct
+    public void init() {
+        this.secretKey = "cumtfxx";
+        int secondIn1day = 1000 * 60 * 60 * 24;
+        this.tokenValidityInMilliseconds = secondIn1day * 2L;
+        this.tokenValidityInMillisecondsForRememberMe = secondIn1day * 7L;
+    }
     private static final long serialVersionUID = -3301605591108950415L;
     @SuppressFBWarnings(value = "SE_BAD_FIELD", justification = "It's okay here")
     private Clock clock = DefaultClock.INSTANCE;
@@ -73,6 +88,27 @@ public class JwtTokenUtil implements Serializable {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, userDetails.getUsername());
+    }
+
+    public String createToken(Authentication authentication, Boolean rememberMe){
+        String authorities = authentication.getAuthorities().stream()       //获取用户的权限字符串，如 USER,ADMIN
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();              //获取当前时间戳
+        Date validity;                                          //存放过期时间
+        if (rememberMe){
+            validity = new Date(now + this.tokenValidityInMilliseconds);
+        }else {
+            validity = new Date(now + this.tokenValidityInMillisecondsForRememberMe);
+        }
+
+        return Jwts.builder()                                   //创建Token令牌
+                .setSubject(authentication.getName())           //设置面向用户
+                .claim(AUTHORITIES_KEY,authorities)             //添加权限属性
+                .setExpiration(validity)                        //设置失效时间
+                .signWith(SignatureAlgorithm.HS512,secretKey)   //生成签名
+                .compact();
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {

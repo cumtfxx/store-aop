@@ -1,4 +1,4 @@
-package com.maker.store.security;
+package com.maker.store.security.handler;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

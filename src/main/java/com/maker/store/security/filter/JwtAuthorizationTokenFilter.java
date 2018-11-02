@@ -1,4 +1,4 @@
-package com.maker.store.security;
+package com.maker.store.security.filter;
 
 import com.maker.store.service.MyUserDetailsService;
 import com.maker.store.util.JwtTokenUtil;
@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -28,6 +29,8 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
     private final MyUserDetailsService userDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
     private final String tokenHeader;
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String AUTHORIZATION_TOKEN = "access_token";
 
     public JwtAuthorizationTokenFilter(MyUserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil, @Value("${jwt.header}") String tokenHeader) {
         this.userDetailsService = userDetailsService;
@@ -75,5 +78,17 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         }
 
         chain.doFilter(request, response);
+    }
+
+    private String resolveToken(HttpServletRequest request){
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);         //从HTTP头部获取TOKEN
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
+            return bearerToken.substring(7, bearerToken.length());                              //返回Token字符串，去除Bearer
+        }
+        String jwt = request.getParameter(AUTHORIZATION_TOKEN);               //从请求参数中获取TOKEN
+        if (StringUtils.hasText(jwt)) {
+            return jwt;
+        }
+        return null;
     }
 }

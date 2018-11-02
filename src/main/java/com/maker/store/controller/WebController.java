@@ -1,12 +1,9 @@
 package com.maker.store.controller;
 
 
-import com.maker.store.model.JwtUser;
+import com.maker.store.security.jwtUser.JwtUser;
 import com.maker.store.model.Store;
-import com.maker.store.security.AuthenticationException;
-import com.maker.store.security.JwtAuthenticationManager;
 import com.maker.store.security.JwtAuthenticationRequest;
-import com.maker.store.security.JwtAuthenticationResponse;
 import com.maker.store.service.MyUserDetailsService;
 import com.maker.store.service.StoreService;
 import com.maker.store.util.JwtTokenUtil;
@@ -15,10 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,37 +25,23 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+//允许跨域访问
+@CrossOrigin("*")
 @Controller
 public class WebController {
-    @Autowired
-    private StoreService storeService;
+    @Autowired private StoreService storeService;
 
-    @Value("${jwt.header}")
-    private String tokenHeader;
+    @Value("${jwt.header}") private String tokenHeader;
 
-    @Autowired
-    MyUserDetailsService userDetailsService;
+    @Autowired MyUserDetailsService userDetailsService;
 
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
+    @Autowired JwtTokenUtil jwtTokenUtil;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    private JwtAuthenticationManager authenticationManager;
-
-//    @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
-//    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
-//        final Authentication authentication = authenticationManager.authenticate
-//                (new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
-//        SecurityContextHolder.getContext().setAuthentication(authentication);        // Reload password post-security so we can generate token
-//        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-//        final String token = jwtTokenUtil.generateToken(userDetails);        // Return the token
-//        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
-//    }
 
     @GetMapping(value = "/")
     @ApiOperation(value = "首页/全部商铺信息")
@@ -80,14 +60,35 @@ public class WebController {
         return modelAndView;
     }
 
-    @GetMapping(value = "/login")
-    public ModelAndView login(){
-        ModelAndView modelAndView=new ModelAndView();
-        modelAndView.setViewName("login");
-        return modelAndView;
+//    @GetMapping(value = "/login")
+//    public ModelAndView login(){
+//        ModelAndView modelAndView=new ModelAndView();
+//        modelAndView.setViewName("login");
+//        return modelAndView;
+//    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
     }
 
-    private final static String JWT_HEADER_NAME = "Authorization";
+    @PreAuthorize("hasAnyRole('USER','MAKER')")
+    @GetMapping("/home")
+    public String home() {
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        return "home";
+    }
+
+    @GetMapping("/homePage")
+    public void home(HttpServletResponse response) throws IOException {
+        response.sendRedirect("home");
+    }
+
+    @PreAuthorize("hasRole('MAKER')")
+    @GetMapping("/maker")
+    public String maker() {
+        return "maker";
+    }
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public JwtUser getAuthenticatedUser(HttpServletRequest request) {
@@ -104,25 +105,6 @@ public class WebController {
         UserDetails userDetails=userDetailsService.loadUserByUsername(myUsername);
         String token=jwtTokenUtil.generateToken(userDetails);
         return token;
-    }
-    @GetMapping("/registration")
-    public String register(@RequestParam String username, HttpServletResponse response) {
-        UserDetails userDetails=userDetailsService.loadUserByUsername(username);
-        String jwt = jwtTokenUtil.generateToken(userDetails);
-        response.setHeader(JWT_HEADER_NAME, jwt);
-        return String.format("JWT for %s : %s", username, jwt);
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping(value = "/home")
-    public String home(){
-        return "home";
-    }
-
-    @PreAuthorize("hasRole('MAKER')")
-    @GetMapping(value = "/maker")
-    public String maker(){
-        return "maker";
     }
 
     @GetMapping(value = "/accessDenied")

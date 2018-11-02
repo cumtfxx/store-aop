@@ -1,17 +1,86 @@
-<!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<!doctype html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+    <!--<meta charset="UTF-8">-->
+    <!--<meta name="viewport"-->
+          <!--content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">-->
+    <!--<meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+    <!--<title>登录页</title>-->
+    <!--<script th:src="@{jquery.js}"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<form method="post" th:action="@{/home}">-->
+    <!--<input type="text" placeholder="用户名" id="username" name="username">-->
+    <!--<input type="text" placeholder="密码" id="password" name="password">-->
+    <!--<button id="isubmit" type="button">登录</button>-->
+<!--</form>-->
+<!--<script>-->
+    <!--$(function () {-->
+        <!--$("#isubmit").click(function () {-->
+            <!--$.ajax({-->
+                <!--url:"/homePage",-->
+                <!--type: "GET",-->
+                <!--headers: {'Authorization': "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VybmFtZSIsImV4cCI6MTU0MTU3NjUyNSwiaWF0IjoxNTQwOTcxNzI1fQ.Ob8DvRZ8iSpAtjhywy5eGlQR-wq8hdn2oGGBegg5bEhiuL6Q1DulkfwIBP_xd1C7ZVRGrSfALiPQAaSTbCv4Cw"}-->
+            <!--});-->
+
+        <!--})-->
+    <!--})-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>登录页</title>
+    <title>Title</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="application/javascript">
+        var header = "";
+        function login() {
+            $.post("/auth/login", {
+                username: $("#username").val(),
+                password: $("#password").val()
+            }, function (data) {
+                console.log(data);
+                header = data;
+            })
+        }
+        function toUserPageBtn() {
+            $.ajax({
+                type: "get",
+                url: "/home",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", header);
+                },
+                success: function (data) {
+                    $("#show").html(data);
+                }
+            });
+        }
+        function toMakerPageBtn() {
+            $.ajax({
+                type: "get",
+                url: "/maker",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", header);
+                },
+                success: function (data) {
+                    $("#show").html(data);
+                }
+            });
+        }
+    </script>
 </head>
 <body>
-<form th:action="@{/generate}" method="get">
-    <input type="text" placeholder="用户名" id="username" name="username">
-    <input type="text" placeholder="密码" id="password" name="password">
-    <button type="submit">登录</button>
-</form>
+<fieldset>
+    <legend>Please Login</legend>
+    <label>UserName</label><input type="text" id="username">
+    <label>Password</label><input type="text" id="password">
+    <input type="button" onclick="login()" value="Login">
+</fieldset>
+<button id="toUserPageBtn" onclick="toUserPageBtn()">访问UserPage</button>
+<button id="toMakerPageBtn" onclick="toMakerPageBtn()">访问UserPage</button>
+<div id="show" style="margin-top: 100px"></div>
 </body>
 </html>

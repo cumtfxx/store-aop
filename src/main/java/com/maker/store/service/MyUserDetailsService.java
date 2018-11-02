@@ -1,19 +1,13 @@
 package com.maker.store.service;
 
 import com.maker.store.mapper.UserMapper;
-import com.maker.store.model.Role;
 import com.maker.store.model.User;
-import com.maker.store.security.JwtUserFactory;
+import com.maker.store.security.jwtUser.JwtUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {

@@ -1,4 +1,4 @@
-package com.maker.store.model;
+package com.maker.store.security.jwtUser;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;

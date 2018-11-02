@@ -1,6 +1,6 @@
 package com.maker.store.controller;
 
-import com.maker.store.model.JwtUser;
+import com.maker.store.security.jwtUser.JwtUser;
 import com.maker.store.security.AuthenticationException;
 import com.maker.store.security.JwtAuthenticationManager;
 import com.maker.store.security.JwtAuthenticationRequest;
@@ -8,11 +8,9 @@ import com.maker.store.security.JwtAuthenticationResponse;
 import com.maker.store.service.MyUserDetailsService;
 import com.maker.store.util.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
 @RestController
-public class UserController {
+public class JwtController {
     @Value("${jwt.header}")
     private String tokenHeader;
 
@@ -35,18 +33,6 @@ public class UserController {
 
     @Autowired
     private MyUserDetailsService userDetailsService;
-
-//    @RequestMapping( method = GET, value = "/user/{userId}" )
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public User loadById( @PathVariable Long userId ) {
-//        return this.userService.findById( userId );
-//    }
-//
-//    @RequestMapping( method = GET, value= "/user/all")
-//    @PreAuthorize("hasRole('ADMIN')")
-//    public List<User> loadAll() {
-//        return this.userService.findAll();
-//    }
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
