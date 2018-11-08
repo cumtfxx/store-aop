@@ -79,16 +79,4 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response);
     }
-
-    private String resolveToken(HttpServletRequest request){
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);         //从HTTP头部获取TOKEN
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
-            return bearerToken.substring(7, bearerToken.length());                              //返回Token字符串，去除Bearer
-        }
-        String jwt = request.getParameter(AUTHORIZATION_TOKEN);               //从请求参数中获取TOKEN
-        if (StringUtils.hasText(jwt)) {
-            return jwt;
-        }
-        return null;
-    }
 }

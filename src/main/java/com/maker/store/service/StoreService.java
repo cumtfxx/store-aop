@@ -42,9 +42,9 @@ public class StoreService extends BaseService<StoreMapper,Store> {
 //        return storeRepository.findById(storeId).get();
     }
 
-    public void addStore(Store store){
+    public Integer addStore(Store store){
 //        return storeMapper.insert(store);
-        storeDao.addStore(store);
+        return storeDao.addStore(store);
 //        storeRepository.save(store);
     }
 

@@ -1,6 +1,7 @@
 package com.maker.store.controller;
 
 
+import com.maker.store.config.EnvConfig;
 import com.maker.store.security.jwtUser.JwtUser;
 import com.maker.store.model.Store;
 import com.maker.store.security.JwtAuthenticationRequest;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,13 +35,17 @@ import java.util.List;
 @CrossOrigin("*")
 @Controller
 public class WebController {
-    @Autowired private StoreService storeService;
+    @Autowired private EnvConfig envConfig;
 
-    @Value("${jwt.header}") private String tokenHeader;
+    @Autowired private StoreService storeService;
 
     @Autowired MyUserDetailsService userDetailsService;
 
     @Autowired JwtTokenUtil jwtTokenUtil;
+
+    @Value("${server.port}") private Integer serverPort;
+
+    @Value("${jwt.header}") private String tokenHeader;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -80,7 +86,7 @@ public class WebController {
     }
 
     @GetMapping("/homePage")
-    public void home(HttpServletResponse response) throws IOException {
+    public void homePage(HttpServletResponse response) throws IOException {
         response.sendRedirect("home");
     }
 
@@ -155,5 +161,13 @@ public class WebController {
 //    public String index(){
 //        return "index";
 //    }
-
+    @GetMapping(value = "/getServerPort")
+    @ApiOperation(value = "获取端口号")
+    public ResponseEntity getServerPort(){
+        logger.info(envConfig.getServerPort().toString());
+        return ResponseEntity.ok("使用Enviroment读取配置信息:"+envConfig.getServerPort().toString()+
+                "\n利用@Value读取配置信息:" +serverPort.toString()+
+                "\n利用@ConfigurationProperties读取配置信息:"+envConfig.getPort().toString()
+        );
+    }
 }

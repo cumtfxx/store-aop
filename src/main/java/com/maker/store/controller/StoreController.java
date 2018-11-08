@@ -31,12 +31,6 @@ public class StoreController {
     @Autowired
     private StoreService storeService;
 
-    @Autowired
-    private EnvConfig envConfig;
-
-    @Value("${server.port}")
-    private Integer serverPort;
-
     private Logger logger=LoggerFactory.getLogger(StoreController.class);
 
     @GetMapping(value = "/getStore/{storeId}",headers = "Accept=application/json"
@@ -51,8 +45,8 @@ public class StoreController {
     @PostMapping(value = "/addStore",params = "action=save")
     @ApiOperation(value = "增加一个商铺",response = Store.class)
     @ApiResponses(@ApiResponse(code=200,message = "增加成功"))
-    public void addStore(@Validated({Store.add.class}) @RequestBody Store store){
-        storeService.addStore(store);
+    public Integer addStore(@Validated({Store.add.class}) @RequestBody Store store){
+        return storeService.addStore(store);
     }
 
     @PostMapping(value = "/transactional",params = "action=save")
@@ -109,12 +103,5 @@ public class StoreController {
         storeService.task2();
         logger.info("Test结束时间"+new Date());
         return ResponseEntity.ok("OK");
-    }
-
-    @GetMapping(value = "/getServerPort")
-    @ApiOperation(value = "获取端口号")
-    public ResponseEntity getServerPort(){
-        logger.info(envConfig.getServerPort().toString());
-        return ResponseEntity.ok(envConfig.getPort());
     }
 }
