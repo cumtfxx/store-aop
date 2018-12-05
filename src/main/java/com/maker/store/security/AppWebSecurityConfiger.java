@@ -47,86 +47,88 @@ public class AppWebSecurityConfiger extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //security
-//        http.authorizeRequests()
-//                .antMatchers("/login","/css/**","/js/**","/img/**","form.html").permitAll()
-//                .antMatchers("/maker/**").hasRole("MAKER")
-//                .antMatchers("/","/home").hasAnyRole("USER","MAKER")
-//                .anyRequest().authenticated()
+//        //security
+////        http.authorizeRequests()
+////                .antMatchers("/login","/css/**","/js/**","/img/**","form.html").permitAll()
+////                .antMatchers("/maker/**").hasRole("MAKER")
+////                .antMatchers("/","/home").hasAnyRole("USER","MAKER")
+////                .anyRequest().authenticated()
+////                .and()
+////                .formLogin().loginPage("/login").permitAll()
+////                .successHandler(appAuthenticationSuccessHandler);
+////                .usernameParameter("username").passwordParameter("password")
+////                .and()
+////                .logout().permitAll()
+////                .and()
+////                .exceptionHandling().accessDeniedPage("/accessDenied");
+//
+//        //jwt
+////        http
+////                .exceptionHandling().authenticationEntryPoint(entryPointUnauthorizedHandler).accessDeniedHandler(restAccessDeniedHandler);
+//
+//
+//        //配置请求访问策略
+//        http
+//                //关闭CSRF、CORS
+//                .cors().disable()
+//                .csrf().disable()
+//                //由于使用Token，所以不需要Session
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //                .and()
-//                .formLogin().loginPage("/login").permitAll()
-//                .successHandler(appAuthenticationSuccessHandler);
-//                .usernameParameter("username").passwordParameter("password")
-//                .and()
-//                .logout().permitAll()
-//                .and()
-//                .exceptionHandling().accessDeniedPage("/accessDenied");
-
-        //jwt
-//        http
-//                .exceptionHandling().authenticationEntryPoint(entryPointUnauthorizedHandler).accessDeniedHandler(restAccessDeniedHandler);
-
-
-        //配置请求访问策略
-        http
-                //关闭CSRF、CORS
-                .cors().disable()
-                .csrf().disable()
-                //由于使用Token，所以不需要Session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                //验证Http请求
-                .authorizeRequests()
-                .antMatchers("/login","/css/**","/js/**","/img/**","/auth/**").permitAll()
-                .antMatchers( HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js" ).permitAll()
-                //允许所有用户访问首页 与 登录
-                .antMatchers("/", "/auth/login").permitAll()
-                //其它任何请求都要经过认证通过
-                .anyRequest().authenticated()
-                //用户页面需要用户权限
-                .antMatchers("/maker/**").hasRole("MAKER")
-                .antMatchers("/home/**").hasAnyRole("USER","MAKER")
-                .and()
-                //设置登出
-                .logout().permitAll();
-//                .and()
-//                .formLogin().loginPage("/login").successHandler(authSuccessHandler)
-//                .permitAll();
-
-        //添加JWT filter 在
-        http
-                .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-//                .addFilter(new JWTLoginFilter(authenticationManager()));
-
-        // disable page caching
-//        http
-//                .headers()
-//                .frameOptions().sameOrigin()  // required to set for H2 else H2 Console will be blank.
-//                .cacheControl();
-
-        //other
-//        http
-//                .formLogin().loginPage("/login")
-//                .defaultSuccessUrl("/home")
-//                .permitAll()
-//                .and();            // 配置退出登陆信息
-//        http
-//                .logout()
-//                .logoutSuccessUrl("/login")
-//                .invalidateHttpSession(true)
-//                .deleteCookies()
-//                .and();
-//        http
+//                //验证Http请求
 //                .authorizeRequests()
-//                .anyRequest().permitAll();       // 允许所有请求通过
+//                .antMatchers("/login","/css/**","/js/**","/img/**","/auth/**").permitAll()
+//                .antMatchers( HttpMethod.GET, "/", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js" ).permitAll()
+//                //允许所有用户访问首页 与 登录
+//                .antMatchers("/", "/auth/login").permitAll()
+//                //其它任何请求都要经过认证通过
+//                .anyRequest().authenticated()
+//                //用户页面需要用户权限
+//                .antMatchers("/maker/**").hasRole("MAKER")
+//                .antMatchers("/home/**").hasAnyRole("USER","MAKER")
+//                .and()
+//                //设置登出
+//                .logout().permitAll();
+////                .and()
+////                .formLogin().loginPage("/login").successHandler(authSuccessHandler)
+////                .permitAll();
+//
+//        //添加JWT filter 在
+//        http
+//                .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+////                .addFilter(new JWTLoginFilter(authenticationManager()));
+//
+//        // disable page caching
+////        http
+////                .headers()
+////                .frameOptions().sameOrigin()  // required to set for H2 else H2 Console will be blank.
+////                .cacheControl();
+//
+//        //other
+////        http
+////                .formLogin().loginPage("/login")
+////                .defaultSuccessUrl("/home")
+////                .permitAll()
+////                .and();            // 配置退出登陆信息
+////        http
+////                .logout()
+////                .logoutSuccessUrl("/login")
+////                .invalidateHttpSession(true)
+////                .deleteCookies()
+////                .and();
+        http
+                .authorizeRequests()
+                .anyRequest().permitAll();       // 允许所有请求通过
 
     }
 
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web.ignoring().antMatchers(HttpMethod.POST);
-//        web.ignoring().antMatchers(HttpMethod.GET);
-//    }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(HttpMethod.POST);
+        web.ignoring().antMatchers(HttpMethod.GET);
+        web.ignoring().antMatchers(HttpMethod.PUT);
+        web.ignoring().antMatchers(HttpMethod.DELETE);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
